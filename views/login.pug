@@ -1,0 +1,61 @@
+doctype
+html(lang='he' dir='rtl')
+    head
+        meta(charset='utf-8')
+        title התחברות למערכת
+        style
+            -if(userFirstName)
+                include ../public/style.css
+                include ../public/menustyle1.css
+            -else
+                include ../public/style.css
+                include ../public/menustyle2.css
+        script.
+            //Function that listens for error events >>
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if('#{error}'){
+                        alert('#{error}');
+                    }
+                })
+            });
+    body
+        div#menu
+        a(href=base_url+'/')
+            img(src='../images/finalProjectLogo.png' style='width:200px; height:150px;')
+        -if(userFirstName)
+            nav  
+                    a(href=base_url+'/') נתוני עבר  
+                    a(href=base_url+'/futureValue') תחזית עתידית 
+                    a(href=base_url+'/updateUser') עדכון פרטים  
+                    a(href=base_url+'/logout') התנתק 
+                    .animation.start-home 
+        -else
+            nav  
+                    a(href=base_url+'/') הצגת נתוני עבר  
+                    a(href=base_url+'/login' class="active") התחברות  
+                    a(href=base_url+'/register') הרשמה  
+                    .animation.start-home
+        div#head_title
+            
+        div#box
+         h2 דף התחברות למערכת
+         form(action='' method='POST' id='main')
+            span מייל:  
+                input(type='mail', id='userMail', name='userMail' value=userMail) 
+            br
+            br
+            span סיסמה:  
+                input(type='password',id='userPassword',name='userPassword') 
+            br 
+            br
+            input(value='התחבר', type='submit') 
+            br
+            br
+            //-a(href="") שכחתי את הסיסמה
+            //-br
+            a(href=base_url+'/register') לא רשום? לחץ כאן להרשמה
+   
+
+
+                

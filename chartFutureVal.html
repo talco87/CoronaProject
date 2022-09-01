@@ -1,0 +1,66 @@
+<head>
+  <title></title>
+  <style>
+    canvas {
+      border: 2px solid black;
+      margin: auto;
+      padding:3%;
+    }
+    .charts-1 {
+      max-width: 80%;
+      margin: auto;
+    }
+  </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <br><br>
+  <div class="charts-1">
+    <canvas id="Accumulated_Verified_Cases"></canvas>
+  </div>
+  <br>
+<script>
+const calcDates = (startDate, num) => Array.from(
+  { length: num },
+  (_, i) => new Date(startDate.getTime() + (i * 60000 * 60 * 24)).toISOString().slice(0, 10)
+);
+
+let today = new Date();
+var DatesArr=calcDates(today,14);
+
+var Dates=[]; 
+
+  for(let i=0; i<14;i++){
+
+    Dates.push(("day: "+(i+1)));
+  }
+
+
+
+  new Chart(Accumulated_Verified_Cases, {
+    type: "line",
+    data: {
+      labels: Dates, // labels of X axis
+      datasets: [
+        {
+          borderColor: "black",
+          data: Accumulated_Verified_Cases2,
+          label: 'New Verified Cases',
+          fill: false
+        },
+      ]
+    },
+    options: {
+      animationEnabled: true,
+      theme: "light2",
+      title: {
+        text: "New Verified Cases"
+      },
+      axisX: {
+        valueFormatString: "DD MMM YYYY",
+      },
+      legend: { display: true, position: 'top' },
+    }
+  });
+
+</script>

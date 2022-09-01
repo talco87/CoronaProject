@@ -1,0 +1,102 @@
+doctype
+html(lang='he' dir='rtl')
+    head
+        meta(charset='utf-8')
+        title קורונה - נתוני עתיד
+        style
+            -if(userFirstName)
+                include ../public/style.css
+                include ../public/menustyle1.css
+            -else
+                include ../public/style.css
+                include ../public/menustyle2.css
+        script.
+            console.log('error','#{error}');
+            //Function that listens for error events >> 
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if('#{error}'){
+                        alert('#{error}');
+                    }
+                })
+            });
+                Accumulated_Verified_Cases2 = #{JSON.stringify(Accumulated_Verified_Cases22)}
+
+    body
+    -color_table=[]
+    -color_table['Irrelevant']='לא רלוונטי',color_table['Red']='אדום',color_table['Green']='ירוק',color_table['Yellow']='צהוב',color_table['Orange']='כתום'
+        div#menu
+        a(href=base_url+'/')
+            img(src='../images/finalProjectLogo.png' style='width:200px; height:150px;')
+        -if(userFirstName)
+            nav     
+                    a(href=base_url+'/') נתוני עבר  
+                    a(href=base_url+'/futureValue' class="active") תחזית עתידית 
+                    a(href=base_url+'/updateUser') עדכון פרטים  
+                    a(href=base_url+'/logout') התנתק 
+                    .animation.start-home
+        -else
+            nav  
+                    a(href=base_url+'/') הצגת נתוני עבר  
+                    a(href=base_url+'/login') התחברות  
+                    a(href=base_url+'/register') הרשמה  
+                    .animation.start-home
+        div#menu
+            h1 תחזית עתידית
+            -if(userFirstName)
+                p היי #{userFirstName}, רוצה לגלות מה צופן העתיד?
+            h2 נא לבחור את העיר הרצויה להצגה
+            h4 תהליך הניבוי לוקח כדקה
+            div#box
+             form(method='POST', id="dataForm")
+               span עיר לבחירה:  
+                    select(id='city_code', name='city_code')
+                        each city in citys_list
+                            if(city.City_Code==city_code)
+                                option(value=city.City_Code selected='true') #{city.City_Name}
+                            else
+                                option(value=city.City_Code) #{city.City_Name}        
+               br
+               br
+               input(value='הצג', type='submit')
+               
+        -if(askedForData)
+            form(method='POST')
+                input(type='hidden' id='sendToMail' name='sendToMail' value='true')
+                input(type='hidden' id='city_code' name='city_code' value=city_code)
+                input(value='אשמח לקבל את הנתונים למייל', type='submit')
+            -if(sentStatus)
+                p הנתונים בדרך אלייך
+            h3   להלן תחזית קורונה של 14 יום החל מ- #{last_date_db_fut}    
+            h4 הנתונים העתידיים מבוססים על נתוני הקורונה האחרונים השמורים במסד של משרד הבריאות
+            include ../chartFutureVal.html
+
+        -if(LastDataAboutCity.length != 0)
+            div#coronaData3   
+                table(name="coronaTable" id="coronaTable") 
+                    tr
+                        th תאריך
+                        th מספר מאומתים מצטבר
+                        th מספר מחלימים
+                        th מספר מתים
+                        th מספר בדיקות
+                        th מספר מתחסנים מנה ראשונה
+                        th מספר מתחסנים מנה שנייה
+                        th מספר מתחסנים מנה שלישית
+                        th צבע העיר
+                        th ציון רמזור 
+                    tr
+                        each row in LastDataAboutCity
+                            tr 
+                                td #{row.Date}
+                                td #{row.Accumulated_Verified_Cases}
+                                td #{row.Accumulated_Recovered}
+                                td #{row.Accumulated_Deaths}
+                                td #{row.Accumulated_Number_Of_Tests}
+                                td #{row.Accumulated_Vaccination_First_Dose}
+                                td #{row.Accumulated_Vaccination_Second_Dose}
+                                td #{row.Accumulated_Vaccination_Third_Dose}
+                                td #{color_table[row.City_Color]}
+                                td #{row.Final_Score}
+                            tr
+        

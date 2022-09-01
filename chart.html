@@ -1,0 +1,117 @@
+<head>
+  <title></title>
+  <style>
+    canvas {
+      border: 2px solid black;
+      margin: 1%;
+      padding:3%;
+    }
+    .charts-1 {
+      display: flex;
+      max-width: 45%;
+    }
+    .charts-2 {
+      display: flex;
+      max-width: 45%;
+    }
+
+  </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <div class="charts-1">
+    <canvas id="Accumulated_Verified_Cases"></canvas>
+    <canvas id="Accumulated_Recovered"></canvas>
+  </div>
+  <br>
+  <div class="charts-2">
+    <canvas id="Accumulated_Deaths"></canvas>
+    <canvas id="Accumulated_Number_Of_Tests"></canvas>
+  </div>
+<script>
+  new Chart(Accumulated_Verified_Cases, {
+    type: "line",
+    data: {
+      labels: Dates, // labels of X axis
+      datasets: [
+        {
+          borderColor: "black",
+          data: Accumulated_Verified_Cases_graph,
+          label: 'Accumulated_Verified_Cases',
+          fill: false
+        },
+      ]
+    },
+    options: {
+
+
+      animationEnabled: true,
+      theme: "light2",
+      title: {
+        text: "Accumulated_Verified_Cases"
+      },
+      axisX: {
+        valueFormatString: "DD MMM YYYY",
+      },
+      legend: { display: true, position: 'top' },
+    }
+  });
+
+
+  new Chart(Accumulated_Recovered, {
+    type: "line",
+    data: {
+      labels: Dates, // labels of X axis
+      datasets: [
+        {
+          borderColor: "red",
+          data: Accumulated_Recovered_graph,
+          label: 'Accumulated_Recovered',
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: { display: true, position: 'top' }
+    }
+  });
+
+
+  new Chart(Accumulated_Deaths, {
+    type: "line",
+    data: {
+      labels: Dates, // labels of X axis
+      datasets: [
+        {
+          borderColor: "blue",
+          data: Accumulated_Deaths_graph,
+          label: 'Accumulated_Deaths',
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: { display: true, position: 'top' }
+    }
+  });
+
+
+  new Chart(Accumulated_Number_Of_Tests, {
+    type: "line",
+    data: {
+      labels: Dates, // labels of X axis
+      datasets: [
+        {
+          borderColor: "green",
+          data: Accumulated_Number_Of_Tests_graph,
+          label: 'Accumulated_Number_Of_Tests',
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: { display: true, position: 'top' }
+    }
+  });
+
+</script>

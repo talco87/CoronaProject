@@ -1,0 +1,69 @@
+doctype
+html(lang='he' dir='rtl')
+ head
+    meta(charset='utf-8')
+    title עדכון פרטים
+    style 
+            -if(userFirstName)
+                include ../public/style.css
+                include ../public/menustyle1.css
+            -else
+                include ../public/style.css
+                include ../public/menustyle2.css
+    script.
+            //Function that listens for error events >> 
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if('#{error}'){
+                        alert('#{error}');
+                    }
+                    else if('#{note}'){
+                        alert('#{note}');
+                    }
+                })
+            });
+          
+
+    script(src='scripts.js' defer) 
+ body
+    div#menu
+        a(href=base_url+'/')
+            img(src='../images/finalProjectLogo.png' style='width:200px; height:150px;')
+        -if(userFirstName)
+            nav  
+                    a(href=base_url+'/') נתוני עבר  
+                    a(href=base_url+'/futureValue') תחזית עתידית  
+                    a(href=base_url+'/updateUser' class="active") עדכון פרטים  
+                    a(href=base_url+'/logout') התנתק 
+                    .animation.start-home 
+        -else
+            nav  
+                    a(href=base_url+'/') הצגת נתוני עבר  
+                    a(href=base_url+'/login') התחברות  
+                    a(href=base_url+'/register') הרשמה  
+                    .animation.start-home
+        
+    div#box
+        h1 עדכון פרטי משתמש
+        form(action='' method='POST')
+            span שם פרטי:  
+                input(type='text', id='userFirstName', name='userFirstName',value=userFirstName)
+            br
+            span שם משפחה:  
+                input(type='text', id='userLastName', name='userLastName',value=userLastName)
+            br
+            span מייל:  
+                input(type='mail', id='userMail', name='userMail',value=userMail disabled)
+            br
+            span עיר מגורים:  
+                    select(id='city_code', name='city_code')
+                        each city in citys_list
+                            if(city.City_Code==userCity)
+                                option(value=city.City_Code "selected") #{city.City_Name}
+                            else
+                                option(value=city.City_Code) #{city.City_Name}   
+            br
+            span תאריך לידה:  
+                input(type='date', id='userBirthday' ,name='userBirthday',value=userBirthday)
+            br
+            input(value='עדכן', type='submit')

@@ -1,0 +1,144 @@
+doctype
+html(lang='he' dir='rtl')
+    head
+        meta(charset='utf-8')
+        title קורונה - נתוני עבר
+        style
+            -if(userFirstName)
+                include ../public/style.css
+                include ../public/menustyle1.css
+            -else
+                include ../public/style.css
+                include ../public/menustyle2.css
+        script.
+            //- Function that listens for error events >> 
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if('#{error}'){
+                        alert('#{error}');
+                    }
+                })
+            });
+                Dates = #{JSON.stringify(DatesData)}
+                Accumulated_Verified_Cases_graph = #{JSON.stringify(Accumulated_Verified_Cases)}
+                Accumulated_Recovered_graph = #{JSON.stringify(Accumulated_Recovered)}
+                Accumulated_Deaths_graph = #{JSON.stringify(Accumulated_Deaths)}
+                Accumulated_Number_Of_Tests_graph = #{JSON.stringify(Accumulated_Number_Of_Tests)}
+
+    body
+    
+    -color_table=[]
+    -color_table['Irrelevant']='לא רלוונטי',color_table['Red']='אדום',color_table['Green']='ירוק',color_table['Yellow']='צהוב',color_table['Orange']='כתום'
+    
+        div#menu
+        a(href=base_url+'/')
+            img(src='../images/finalProjectLogo.png' style='width:200px; height:150px;')
+        -if(userFirstName)
+            nav     
+                    a(href=base_url+'/' class="active") נתוני עבר  
+                    a(href=base_url+'/futureValue') תחזית עתידית  
+                    a(href=base_url+'/updateUser') עדכון פרטים  
+                    a(href=base_url+'/logout') התנתק 
+                    .animation.start-home
+        -else
+            nav  
+                    a(href=base_url+'/' class="active") הצגת נתוני עבר  
+                    a(href=base_url+'/login') התחברות  
+                    a(href=base_url+'/register') הרשמה  
+                    .animation.start-home
+        div#menu
+            
+            h1 מערכת מעקב קורונה עירונית והצגת נתוני עבר          
+            -if(userFirstName)
+                p היי #{userFirstName}, שמחים לראותך 
+                
+            h2 נא לבחור את העיר והתאריכים המבוקשים להצגה
+            div#box
+             form(method='POST', id="dataForm")
+               span עיר לבחירה:
+                 -if(citys_list)
+                    select(id='city_code', name='city_code')
+                        each city in citys_list      
+                            if(city.City_Code==city_code)
+                                option(value=city.City_Code "selected") #{city.City_Name}
+                            else
+                                option(value=city.City_Code) #{city.City_Name}        
+               br
+               br
+               span תאריך התחלתי:  
+                    input(type='date',id='start_date', name='start_date',min=first_date_db, max=Last_date_db, value=Start_date) 
+               span תאריך סיום:  
+                    input(type='date',id='end_date', name='end_date', min=first_date_db,max=Last_date_db value=end_date) 
+               br 
+               br
+               input(value='הצג', type='submit') 
+            p#errMsg #{error}
+                    
+        br     
+        -if(askedForData)
+            -if(!userFirstName)
+                -if(rows.length>0)
+                    a(href=base_url+'/login') המערכת יודעת לחזות מה יהיה בעיר בעתיד ולהציג מידע נוסף לאחר התחברות למערכת, לחץ כאן להתחברות
+                    br
+            -else
+                form(method='POST')
+                    input(type='hidden' id='sendToMail' name='sendToMail' value='true')
+                    input(type='hidden' id='city_code' name='city_code' value=city_code)
+                    input(type='hidden' id='start_date' name='start_date' value=Start_date)
+                    input(type='hidden' id='end_date' name='end_date' value=end_date)
+                    input(value='אשמח לקבל את הנתונים למייל', type='submit') 
+        -if(sentStatus)
+            p הנתונים בדרך אלייך
+        br
+
+        -if(rows.length != 0)
+            include ../chart.html
+            br
+            div#divForTable 
+                input(type='hidden' id='coronaDataLength' name='coronaDataLength' value=coronaDataLength) 
+                table(name="coronaTable" id="coronaTable") 
+                    tr
+                        th תאריך
+                        th מספר מאומתים מצטבר
+                        th מספר מחלימים
+                        th מספר מתים
+                        th מספר בדיקות
+                        th מספר מתחסנים מנה ראשונה
+                        th מספר מתחסנים מנה שנייה
+                        th מספר מתחסנים מנה שלישית
+                        th ציון רמזור 
+                        th צבע העיר
+                    
+                    each row in rows
+                        tr(id=row.index)
+                            td #{row.Date}
+                            td #{row.Accumulated_Verified_Cases}
+                            td #{row.Accumulated_Recovered}
+                            td #{row.Accumulated_Deaths}
+                            td #{row.Accumulated_Number_Of_Tests}
+                            td #{row.Accumulated_Vaccination_First_Dose}
+                            td #{row.Accumulated_Vaccination_Second_Dose}
+                            td #{row.Accumulated_Vaccination_Third_Dose}
+                            -if(row.Final_Score=='-1')
+                                td לא רלוונטי
+                            -else
+                                td #{row.Final_Score}
+                            td#City_Color #{color_table[row.City_Color]}
+                            
+    script.
+        document.addEventListener("DOMContentLoaded", function(event) { 
+            var coronaDataLength= document.getElementById('coronaDataLength')
+            for(let i=0; i<coronaDataLength.value;i++){
+                var City_Color  = document.getElementById(i).lastElementChild.textContent;
+                if(City_Color== "ירוק")
+                    document.getElementById(i).style.backgroundColor = "#d3fab6"; // green
+                else if(City_Color=="צהוב")
+                    document.getElementById(i).style.backgroundColor = "#f7f297"; // yellow
+                else if(City_Color=="כתום")
+                    document.getElementById(i).style.backgroundColor = "#f7da97"; // orange
+                else if(City_Color =="אדום")
+                    document.getElementById(i).style.backgroundColor = "#f7b497"; // red
+            }
+            
+            });
+        
