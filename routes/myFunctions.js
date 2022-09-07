@@ -104,8 +104,6 @@ module.exports = {
                 console.log("sentStatus",sentStatus)
                 sentStatus = false;
             }
-            
-            //return sentStatus;
         })
         return sentStatus
     },
@@ -118,8 +116,6 @@ module.exports = {
         };
     },
     dateValidator(start_date, end_date, last_date_db) {
-        // start_date = start_date.trim();
-        // end_date = end_date.trim();
         if(start_date ==''){
             error = "נא להזין תאריך התחלה מבוקש";
             return error;
@@ -247,16 +243,5 @@ module.exports = {
                 console.log('Could not Save the log', the_log)
         });
         next();
-    },
-    async getLastDataAboutCity(city_code, SQLdb) {
-        SQLdb.query(`select distinct * from city_status_vaccine_total where city_code=? and Date= (select max(Date) from city_status_vaccine_total)`, city_code, (err, result) => {
-            if (err) {
-                return console.log(err);
-            }
-            else {
-                LastDataAboutCity = Object.values(JSON.parse(JSON.stringify(result)));
-                return LastDataAboutCity;
-            }
-        })
     },
 };
