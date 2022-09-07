@@ -301,33 +301,18 @@ coronaRoutes.get('/logout', function (req, res) {
 //FUTURE VAL
 coronaRoutes.get('/futureValue', myFunctions.checkIfUserLogedIn, (req, res) => {
     var error = "";
-    res.render('futureValue.pug', { base_url: BASE_URL, citys_list: citys_list, city_code: req.session.userCity, userFirstName: req.session.firstName, sentStatus: false, askedForData: false, LastDataAboutCity: [], error})
+    res.render('futureValue.pug', { base_url: BASE_URL, citys_list: citys_list, city_code: req.session.userCity, userFirstName: req.session.firstName, sentStatus: false, askedForData: false, error})
 })
 
-LastDataAboutCity = '';
 coronaRoutes.post('/futureValue', myFunctions.checkIfUserLogedIn, urlencodedParser,  async function (req, res) {
     var error = "";
     var { city_code, sendToMail } = req.body;
     last_date_db_fut = myFunctions.dateFormat(last_date_db, 'tbl');
     Future_dates = myFunctions.futureDates(last_date_db);
-    // console.log(last_date_db);
-    // console.log("JSON.stringify ",JSON.stringify(last_date_db));
-    //LastDataAboutCity = myFunctions.getLastDataAboutCity(city_code, SQLdb);
-    // SQLdb.query(`select distinct * from city_status_vaccine_total where city_code=? and Date= (select max(Date) from city_status_vaccine_total)`, city_code, (err, result) => {
-    //     if (err) {
-    //         return console.log(err);
-    //     }
-    //     else {
-    //         LastDataAboutCity = Object.values(JSON.parse(JSON.stringify(result)));
-    //         //LastDataAboutCity = changeToIsraelDesplay(LastDataAboutCity)
-    //res.render('futureValue.pug', { base_url: BASE_URL, citys_list: citys_list, userFirstName: req.session.firstName, coronaData: coronaData, sentStatus : false, askedForData:false,/*LastDataAboutCity:LastDataAboutCity*/ })
-
-    //     }
-    // })
     if (!sendToMail) {
         Axios.get(`http://127.0.0.1:5000/?cityCode=${city_code}`).then((response) => {
             Accumulated_Verified_Cases2 = response.data;
-            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: false, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error /*LastDataAboutCity: LastDataAboutCity*/ })
+            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: false, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error })
         })
     }
     else {//שליחת מייל
@@ -335,7 +320,7 @@ coronaRoutes.post('/futureValue', myFunctions.checkIfUserLogedIn, urlencodedPars
             if (sendToMail) {//שליחת מייל
                 Status = await myFunctions.sendMail(Accumulated_Verified_Cases2, city_code, req.path, citys_list, transporter,options);
             }
-            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: Status, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error /*LastDataAboutCity: LastDataAboutCity*/ })
+            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: Status, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error  })
     }
 })
 coronaRoutes.all('*', function (req, res) {// טיפול בנתיב שלא מוגדר
