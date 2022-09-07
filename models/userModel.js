@@ -1,15 +1,5 @@
 var mongoose = require('mongoose');
 // Create the schema
-/*
-var user_schema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    mail: String,
-    password: String,
-    city: String,
-    birthday: Date
-});*/
-
 var user_schema = new mongoose.Schema({
     firstName:{type:String, required:[true,'first name is missing']},
     lastName:{type:String, required:[true,'last name is missing']},
