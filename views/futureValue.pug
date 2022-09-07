@@ -70,33 +70,3 @@ html(lang='he' dir='rtl')
             h3   להלן תחזית קורונה של 14 יום החל מ- #{last_date_db_fut}    
             h4 הנתונים העתידיים מבוססים על נתוני הקורונה האחרונים השמורים במסד של משרד הבריאות
             include ../chartFutureVal.html
-
-        -if(LastDataAboutCity.length != 0)
-            div#coronaData3   
-                table(name="coronaTable" id="coronaTable") 
-                    tr
-                        th תאריך
-                        th מספר מאומתים מצטבר
-                        th מספר מחלימים
-                        th מספר מתים
-                        th מספר בדיקות
-                        th מספר מתחסנים מנה ראשונה
-                        th מספר מתחסנים מנה שנייה
-                        th מספר מתחסנים מנה שלישית
-                        th צבע העיר
-                        th ציון רמזור 
-                    tr
-                        each row in LastDataAboutCity
-                            tr 
-                                td #{row.Date}
-                                td #{row.Accumulated_Verified_Cases}
-                                td #{row.Accumulated_Recovered}
-                                td #{row.Accumulated_Deaths}
-                                td #{row.Accumulated_Number_Of_Tests}
-                                td #{row.Accumulated_Vaccination_First_Dose}
-                                td #{row.Accumulated_Vaccination_Second_Dose}
-                                td #{row.Accumulated_Vaccination_Third_Dose}
-                                td #{color_table[row.City_Color]}
-                                td #{row.Final_Score}
-                            tr
-        
