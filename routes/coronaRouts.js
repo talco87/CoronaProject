@@ -311,8 +311,22 @@ coronaRoutes.post('/futureValue', myFunctions.checkIfUserLogedIn, urlencodedPars
     Future_dates = myFunctions.futureDates(last_date_db);
     if (!sendToMail) {
         Axios.get(`http://127.0.0.1:5000/?cityCode=${city_code}`).then((response) => {
-            Accumulated_Verified_Cases2 = response.data;
-            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: false, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error })
+            Accumulated_Verified_Cases2Split = response.data;
+            Accumulated_Verified_Cases2_Pred=[];
+            Accumulated_Verified_Cases2=[];
+
+            for(let i=0; i<Accumulated_Verified_Cases2Split.length;){
+                if(i <14){
+                        Accumulated_Verified_Cases2[i] = Accumulated_Verified_Cases2Split[i]
+                        Accumulated_Verified_Cases2_Pred[i] =Accumulated_Verified_Cases2Split[i]
+                        i++
+                }
+                else{
+                    Accumulated_Verified_Cases2_Pred[i] = Accumulated_Verified_Cases2Split[i]
+                    i++
+                    }
+              }
+            res.render('futureValue.pug', { base_url: BASE_URL, Accumulated_Verified_Cases22: Accumulated_Verified_Cases2, Accumulated_Verified_Cases22Pred: Accumulated_Verified_Cases2_Pred, last_date_db_fut: last_date_db_fut, askedForData: true, sentStatus: false, userFirstName: req.session.firstName, citys_list: citys_list, city_code: city_code, Future_dates: Future_dates, error })
         })
     }
     else {//שליחת מייל
